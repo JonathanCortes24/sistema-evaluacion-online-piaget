@@ -1,307 +1,179 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Proyecto de desarrollo de una plataforma web de evaluación académica.">
-<title>Sistema de Evaluación Online | Proyecto de desarrollo</title>
-
-<style>
-:root {
-    --bg: #081426;
-    --panel: #10233d;
-    --blue: #3185f5;
-    --cyan: #54d5e8;
-    --white: #f4f7fc;
-    --muted: #aab9ce;
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-    margin: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    background: var(--bg);
-    color: var(--white);
-    line-height: 1.6;
-}
-a { color: inherit; text-decoration: none; }
-
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 22px 8%;
-    border-bottom: 1px solid #ffffff14;
-}
-.logo {
-    font-size: 19px;
-    font-weight: 750;
-    letter-spacing: .4px;
-}
-.logo span { color: var(--cyan); }
-.nav-label {
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.hero {
-    padding: 100px 20px 85px;
-    text-align: center;
-    background:
-      radial-gradient(ellipse at 50% 0%, #1b559a55, transparent 65%),
-      linear-gradient(180deg, #0c1e35, var(--bg));
-}
-.tag {
-    display: inline-block;
-    border: 1px solid #54d5e866;
-    color: var(--cyan);
-    border-radius: 30px;
-    padding: 7px 16px;
-    font-size: 12px;
-    letter-spacing: 1.4px;
-    text-transform: uppercase;
-}
-.hero h1 {
-    max-width: 850px;
-    margin: 25px auto 18px;
-    font-size: clamp(36px, 6vw, 62px);
-    line-height: 1.12;
-    letter-spacing: -1.8px;
-}
-.hero h1 span {
-    background: linear-gradient(90deg, #62b5ff, #54d5e8);
-    -webkit-background-clip: text;
-    color: transparent;
-}
-.hero p {
-    max-width: 690px;
-    margin: 0 auto;
-    color: var(--muted);
-    font-size: 17px;
-}
-.actions {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 14px;
-    margin-top: 32px;
-}
-.btn {
-    padding: 13px 23px;
-    border-radius: 8px;
-    font-weight: 650;
-    font-size: 14px;
-    transition: .2s;
-}
-.btn-primary {
-    background: var(--blue);
-    color: white;
-}
-.btn-primary:hover { background: #4b98ff; transform: translateY(-2px); }
-.btn-outline {
-    border: 1px solid #ffffff40;
-    color: white;
-}
-.btn-outline:hover { background: #ffffff12; }
-
-section {
-    max-width: 1100px;
-    margin: auto;
-    padding: 65px 24px;
-}
-.section-title {
-    text-align: center;
-    margin-bottom: 35px;
-}
-.section-title h2 {
-    font-size: 29px;
-    margin: 0 0 9px;
-}
-.section-title p {
-    color: var(--muted);
-    margin: 0;
-}
-.cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 18px;
-}
-.card {
-    background: linear-gradient(145deg, #132a47, #0e2037);
-    border: 1px solid #ffffff13;
-    border-radius: 14px;
-    padding: 25px;
-    transition: .25s;
-}
-.card:hover {
-    transform: translateY(-5px);
-    border-color: #54d5e866;
-}
-.icon {
-    width: 43px;
-    height: 43px;
-    display: grid;
-    place-items: center;
-    border-radius: 11px;
-    background: #3185f522;
-    color: var(--cyan);
-    font-size: 21px;
-    margin-bottom: 18px;
-}
-.card h3 { margin: 0 0 9px; font-size: 17px; }
-.card p { margin: 0; color: var(--muted); font-size: 14px; }
-
-.tech {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-.tech span {
-    background: #142b48;
-    border: 1px solid #ffffff18;
-    color: #d9e7f8;
-    padding: 10px 17px;
-    border-radius: 8px;
-    font-size: 14px;
-}
-.about {
-    background: linear-gradient(120deg, #12345b, #10233d);
-    border: 1px solid #ffffff18;
-    border-radius: 16px;
-    padding: 35px;
-    text-align: center;
-}
-.about p {
-    max-width: 750px;
-    margin: 12px auto 0;
-    color: #c1d0e2;
-}
-footer {
-    text-align: center;
-    padding: 30px 20px;
-    border-top: 1px solid #ffffff14;
-    color: #8295ad;
-    font-size: 13px;
-}
-footer a { color: var(--cyan); }
-
-@media(max-width:600px) {
-    nav { padding: 18px 20px; }
-    .nav-label { display: none; }
-    .hero { padding: 75px 20px 65px; }
-    .hero p { font-size: 15px; }
-    section { padding: 48px 20px; }
-    .about { padding: 25px 20px; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portafolio de un sistema web de evaluación académica: acceso de estudiantes, gestión docente y consulta de resultados.">
+  <meta name="theme-color" content="#102d4e">
+  <title>Sistema de Evaluación Académica | Proyecto</title>
+  <style>
+    :root {
+      --navy:#102d4e; --blue:#1d4d78; --red:#c9273b; --ink:#18324e;
+      --muted:#64758a; --paper:#f3f6fa; --line:#dce5ef; --white:#fff;
+      --shadow:0 18px 48px rgba(16,45,78,.10);
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; font-family:Inter, "Segoe UI", Arial, sans-serif; color:var(--ink); background:var(--paper); line-height:1.65; }
+    a { color:inherit; }
+    .topbar { background:var(--navy); color:#fff; border-bottom:4px solid var(--red); }
+    .nav { max-width:1180px; margin:auto; padding:19px 24px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .brand { display:flex; align-items:center; gap:13px; font-weight:800; letter-spacing:.02em; }
+    .brand-mark { width:42px; height:42px; border:1px solid rgba(255,255,255,.45); border-radius:12px; display:grid; place-items:center; color:#fff; font-size:14px; font-weight:900; }
+    .brand small { display:block; color:#b9c9d9; font-size:10px; letter-spacing:.18em; font-weight:700; }
+    .nav-label { color:#d4e0ec; font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+    .wrap { width:min(1180px, calc(100% - 40px)); margin:auto; }
+    .hero { margin:48px auto 28px; padding:58px 56px; border-radius:25px; color:#fff; background:linear-gradient(118deg,#102f52 0%,#245b88 100%); box-shadow:var(--shadow); position:relative; overflow:hidden; }
+    .hero:after { content:""; position:absolute; width:360px; height:360px; border:1px solid rgba(255,255,255,.12); border-radius:50%; right:-100px; top:-210px; box-shadow:0 0 0 34px rgba(255,255,255,.035),0 0 0 72px rgba(255,255,255,.025); }
+    .eyebrow { color:#b9d2e9; font-size:12px; font-weight:800; letter-spacing:.17em; text-transform:uppercase; margin:0 0 12px; }
+    h1 { max-width:780px; margin:0; font-size:clamp(34px,5vw,54px); line-height:1.12; letter-spacing:-.035em; }
+    .hero p { max-width:720px; margin:20px 0 0; color:#dbe7f2; font-size:17px; }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; position:relative; z-index:1; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; padding:12px 19px; border-radius:10px; text-decoration:none; font-weight:750; font-size:14px; transition:.2s ease; }
+    .btn-primary { background:#fff; color:var(--navy); }
+    .btn-secondary { border:1px solid rgba(255,255,255,.38); color:#fff; }
+    .btn:hover { transform:translateY(-2px); }
+    section { margin:58px 0; }
+    .section-head { max-width:730px; margin-bottom:24px; }
+    .section-head .eyebrow { color:var(--red); margin-bottom:7px; }
+    h2 { margin:0; color:var(--navy); font-size:clamp(26px,3vw,35px); line-height:1.2; letter-spacing:-.025em; }
+    .section-head p { margin:12px 0 0; color:var(--muted); }
+    .screens { display:grid; grid-template-columns:1fr; gap:25px; }
+    .screen-card { background:#fff; border:1px solid var(--line); border-radius:19px; overflow:hidden; box-shadow:var(--shadow); }
+    .screen-copy { padding:23px 26px 18px; display:flex; align-items:flex-start; justify-content:space-between; gap:20px; }
+    .screen-copy h3 { margin:0; font-size:21px; color:var(--navy); }
+    .screen-copy p { margin:5px 0 0; color:var(--muted); font-size:14px; }
+    .tag { white-space:nowrap; color:#9c2636; background:#fff0f1; padding:6px 10px; border-radius:30px; font-size:11px; font-weight:800; }
+    .screen-image { display:block; width:100%; height:auto; border-top:1px solid var(--line); background:#eef2f7; }
+    .privacy { margin:12px 26px 22px; color:#748397; font-size:12px; }
+    .features { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .feature { background:#fff; border:1px solid var(--line); border-radius:16px; padding:23px; }
+    .feature-icon { width:40px; height:40px; display:grid; place-items:center; border-radius:12px; color:#fff; background:var(--blue); font-size:18px; font-weight:800; margin-bottom:15px; }
+    .feature h3 { margin:0 0 7px; color:var(--navy); font-size:17px; }
+    .feature p { margin:0; color:var(--muted); font-size:14px; }
+    .tech-panel { background:#e8eef5; border:1px solid #d8e2ed; border-radius:18px; padding:27px; display:flex; flex-wrap:wrap; gap:10px; }
+    .tech { padding:9px 14px; border-radius:9px; background:#fff; color:#244665; border:1px solid #d8e2ed; font-size:13px; font-weight:750; }
+    .note { background:#fff; border-left:4px solid var(--red); border-radius:0 13px 13px 0; padding:17px 20px; color:var(--muted); font-size:13px; }
+    footer { margin-top:70px; padding:27px 20px; text-align:center; color:#c6d3e0; background:var(--navy); font-size:13px; }
+    footer strong { color:#fff; }
+    @media (min-width:850px) { .screens { grid-template-columns:1fr 1fr; align-items:start; } }
+    @media (max-width:700px) {
+      .nav { padding:15px 18px; } .nav-label { display:none; }
+      .wrap { width:min(100% - 28px,1180px); }
+      .hero { margin-top:25px; padding:37px 25px; border-radius:18px; }
+      .hero p { font-size:15px; }
+      section { margin:43px 0; }
+      .screen-copy { padding:18px; display:block; }
+      .tag { display:inline-block; margin-top:10px; }
+      .privacy { margin:10px 18px 18px; }
+      .features { grid-template-columns:1fr; }
+    }
+  </style>
 </head>
-
 <body>
-
-<nav>
-    <div class="logo">DEV<span>PROJECT</span></div>
-    <div class="nav-label">PORTAFOLIO DE DESARROLLO WEB</div>
-</nav>
-
-<header class="hero">
-    <div class="tag">Proyecto de desarrollo tecnológico</div>
-    <h1>Sistema de <span>Evaluación Online</span></h1>
-    <p>
-        Una plataforma web orientada a modernizar y automatizar
-        los procesos de evaluación académica mediante herramientas
-        digitales e integración de datos.
-    </p>
-    <div class="actions">
-        <a class="btn btn-primary"
-           href="https://github.com/JonathanCortes24/sistema-evaluacion-online-piaget"
-           target="_blank" rel="noopener">
-           Explorar código en GitHub ↗
-        </a>
-        <a class="btn btn-outline" href="#funcionalidades">
-           Conocer el proyecto
-        </a>
+  <header class="topbar">
+    <div class="nav">
+      <div class="brand">
+        <div class="brand-mark">EA</div>
+        <div>PROYECTO WEB<small>PORTAFOLIO DE DESARROLLO</small></div>
+      </div>
+      <div class="nav-label">Sistema de evaluación académica</div>
     </div>
-</header>
+  </header>
 
-<section id="funcionalidades">
-    <div class="section-title">
-        <h2>Funcionalidades principales</h2>
-        <p>Herramientas desarrolladas para optimizar la gestión académica.</p>
-    </div>
+  <main class="wrap">
+    <section class="hero">
+      <p class="eyebrow">Proyecto de desarrollo web</p>
+      <h1>Sistema de Evaluación Académica</h1>
+      <p>Plataforma web diseñada para facilitar la rendición de evaluaciones en línea y apoyar el seguimiento de resultados académicos mediante herramientas de consulta para docentes.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#demostracion">Explorar el sistema</a>
+        <a class="btn btn-secondary" href="https://github.com/JonathanCortes24/sistema-evaluacion-online-piaget" target="_blank" rel="noopener noreferrer">Ver código en GitHub ↗</a>
+      </div>
+    </section>
 
-    <div class="cards">
-        <article class="card">
-            <div class="icon">✓</div>
-            <h3>Validación de estudiantes</h3>
-            <p>Verificación de estudiantes y cursos antes de iniciar las evaluaciones.</p>
+    <section id="demostracion">
+      <div class="section-head">
+        <p class="eyebrow">Demostración visual</p>
+        <h2>Conoce sus principales módulos</h2>
+        <p>Estas vistas muestran el flujo general de uso: desde la identificación del estudiante hasta la consulta de resultados académicos.</p>
+      </div>
+
+      <div class="screens">
+        <article class="screen-card">
+          <div class="screen-copy">
+            <div>
+              <h3>01. Acceso de estudiantes</h3>
+              <p>Formulario de identificación y selección de curso para validar el acceso a las evaluaciones asignadas.</p>
+            </div>
+            <span class="tag">Módulo estudiante</span>
+          </div>
+          <img class="screen-image" src="assets/acceso-estudiantes.png" alt="Pantalla de identificación de estudiantes del sistema de evaluación">
         </article>
 
-        <article class="card">
-            <div class="icon">▤</div>
-            <h3>Gestión de evaluaciones</h3>
-            <p>Presentación de pruebas y preguntas mediante información organizada.</p>
+        <article class="screen-card">
+          <div class="screen-copy">
+            <div>
+              <h3>02. Panel de resultados</h3>
+              <p>Vista docente con indicadores generales, filtros por curso y búsqueda de registros académicos.</p>
+            </div>
+            <span class="tag">Módulo docente</span>
+          </div>
+          <img class="screen-image" src="assets/panel-resultados-privacidad.png" alt="Panel docente de resultados académicos con datos personales ocultos">
+          <p class="privacy">La información individual se ha ocultado en esta imagen de demostración para proteger la privacidad.</p>
         </article>
+      </div>
+    </section>
 
-        <article class="card">
-            <div class="icon">⚙</div>
-            <h3>Corrección automática</h3>
-            <p>Procesamiento de respuestas desde el servidor y registro de resultados.</p>
+    <section>
+      <div class="section-head">
+        <p class="eyebrow">Funcionalidades</p>
+        <h2>¿Qué permite realizar?</h2>
+        <p>Una solución que integra el proceso de evaluación y la revisión de información académica en una misma plataforma.</p>
+      </div>
+      <div class="features">
+        <article class="feature">
+          <div class="feature-icon">01</div>
+          <h3>Acceso validado</h3>
+          <p>Identificación del estudiante y selección de su curso antes de acceder a las evaluaciones disponibles.</p>
         </article>
+        <article class="feature">
+          <div class="feature-icon">02</div>
+          <h3>Evaluaciones en línea</h3>
+          <p>Interfaz para responder evaluaciones digitales con distintos tipos de preguntas.</p>
+        </article>
+        <article class="feature">
+          <div class="feature-icon">03</div>
+          <h3>Seguimiento docente</h3>
+          <p>Consulta de registros, filtros y resultados para apoyar el seguimiento del proceso académico.</p>
+        </article>
+      </div>
+    </section>
 
-        <article class="card">
-            <div class="icon">▥</div>
-            <h3>Panel docente</h3>
-            <p>Consulta de resultados y análisis del desempeño por pregunta.</p>
-        </article>
+    <section>
+      <div class="section-head">
+        <p class="eyebrow">Tecnologías</p>
+        <h2>Herramientas utilizadas</h2>
+        <p>El proyecto combina tecnologías web con servicios de Google para implementar la lógica de evaluación y el almacenamiento de información.</p>
+      </div>
+      <div class="tech-panel">
+        <span class="tech">Google Apps Script</span>
+        <span class="tech">Google Sheets</span>
+        <span class="tech">HTML5</span>
+        <span class="tech">CSS3</span>
+        <span class="tech">JavaScript</span>
+        <span class="tech">GitHub</span>
+      </div>
+    </section>
 
-        <article class="card">
-            <div class="icon">◈</div>
-            <h3>Control de intentos</h3>
-            <p>Validaciones para administrar los intentos y evitar envíos simultáneos.</p>
-        </article>
-
-        <article class="card">
-            <div class="icon">▣</div>
-            <h3>Diseño adaptable</h3>
-            <p>Interfaz preparada para distintos tamaños de pantalla.</p>
-        </article>
+    <div class="note">
+      <strong>Nota sobre la demostración:</strong> esta página de GitHub Pages presenta capturas y características del proyecto. La ejecución del sistema y sus funciones de servidor se realizan mediante Google Apps Script; esta página no conecta con datos reales ni permite rendir evaluaciones.
     </div>
-</section>
+  </main>
 
-<section>
-    <div class="section-title">
-        <h2>Tecnologías utilizadas</h2>
-        <p>Integración de herramientas para construir una solución web.</p>
-    </div>
-    <div class="tech">
-        <span>Google Apps Script</span>
-        <span>Google Sheets</span>
-        <span>HTML5</span>
-        <span>CSS3</span>
-        <span>JavaScript</span>
-    </div>
-</section>
-
-<section>
-    <div class="about">
-        <h2>Desarrollo e innovación educativa</h2>
-        <p>
-            Este proyecto de portafolio presenta una solución tecnológica
-            para apoyar la administración de evaluaciones académicas,
-            integrando automatización, procesamiento de información
-            y herramientas de desarrollo web.
-        </p>
-    </div>
-</section>
-
-<footer>
-    Proyecto de desarrollo web ·
-    <a href="https://github.com/JonathanCortes24" target="_blank" rel="noopener">
-        GitHub
-    </a>
-</footer>
-
+  <footer>
+    <strong>Sistema de Evaluación Académica</strong><br>
+    Portafolio de proyecto · Desarrollo web
+  </footer>
 </body>
 </html>
