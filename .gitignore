@@ -1,0 +1,23 @@
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archivos de editores
+.vscode/
+.idea/
+
+# Archivos locales y temporales
+*.log
+*.tmp
+*.bak
+
+# Archivos de configuración local
+.env
+.env.*
+!.env.example
+
+# Credenciales y claves
+credentials.json
+secrets.json
