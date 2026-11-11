@@ -1,0 +1,2633 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Sistema de Evaluación Online</title>
+
+  <style>
+    :root {
+      --primary: #123B70;
+      --primary-dark: #0B2C55;
+      --secondary: #C62828;
+      --secondary-dark: #A91F1F;
+      --background: #F3F5FA;
+      --surface: #FFFFFF;
+      --text: #202B43;
+      --muted: #718096;
+      --border: #E2E7F0;
+      --success: #16865C;
+      --danger: #C62828;
+      --radius: 15px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    /* BARRA SUPERIOR */
+
+    .topbar {
+      background: var(--primary);
+      border-bottom: 4px solid var(--secondary);
+      padding: 17px 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 21px;
+      font-weight: 800;
+      color: white;
+    }
+
+    .brand-logo {
+      width: 66px;
+      height: 66px;
+      flex: 0 0 66px;
+      object-fit: contain;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: #123B70;
+      padding: 4px;
+      background: #FFFFFF;
+      border: 2px solid rgba(255,255,255,.88);
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,.18);
+    }
+
+    .brand small {
+      display: block;
+      font-size: 10px;
+      color: #DCE6F5;
+      letter-spacing: 2px;
+      margin-top: 3px;
+    }
+
+    .top-label {
+      font-size: 12px;
+      color: white;
+    }
+
+    main {
+      max-width: 1050px;
+      width: 92%;
+      margin: 35px auto 60px;
+    }
+
+    /* ENCABEZADO PRINCIPAL */
+
+    .hero {
+      background: linear-gradient(120deg, #123B70, #24558E);
+      border-left: 6px solid var(--secondary);
+      color: white;
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 25px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 29px;
+    }
+
+    .hero p {
+      margin: 0;
+      opacity: .9;
+      line-height: 1.6;
+    }
+
+    /* TARJETAS */
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 20px rgba(31, 45, 80, .035);
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      color: var(--primary);
+    }
+
+    .description {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    /* CAMPOS */
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 17px;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    .field label {
+      display: block;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: white;
+      color: var(--text);
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(18, 59, 112, .1);
+    }
+
+    /* BOTONES */
+
+    .btn {
+      border: 0;
+      padding: 13px 20px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: .2s;
+    }
+
+    .btn-primary {
+      color: white;
+      background: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #FCEBEC;
+      color: var(--secondary);
+    }
+
+    .btn-home {
+      color: white;
+      background: var(--secondary);
+      margin-top: 15px;
+      min-width: 230px;
+    }
+
+    .btn-home:hover {
+      background: var(--secondary-dark);
+    }
+
+    .btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .full {
+      width: 100%;
+    }
+
+    /* MENSAJES */
+
+    .message {
+      padding: 13px 15px;
+      border-radius: 9px;
+      margin: 15px 0;
+      font-size: 14px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .message.error {
+      background: #fff0f1;
+      color: var(--danger);
+      display: block;
+    }
+
+    .message.success {
+      background: #eaf8f1;
+      color: var(--success);
+      display: block;
+    }
+
+    .message.info {
+      background: #edf2ff;
+      color: var(--primary);
+      display: block;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* RESUMEN DEL ESTUDIANTE */
+
+    .student-summary {
+      background: #F1F5FA;
+      border: 1px solid #DCE5F0;
+      border-radius: 12px;
+      padding: 17px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .student-summary strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .student-summary span {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* EVALUACIÓN */
+
+    .evaluation-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .evaluation-header h2 {
+      margin: 0;
+      font-size: 23px;
+    }
+
+    .badge {
+      background: #FCEBEC;
+      color: var(--secondary);
+      padding: 7px 12px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .part-title {
+      padding: 16px 18px;
+      background: #EEF3F9;
+      border-left: 4px solid var(--secondary);
+      border-radius: 8px;
+      margin: 28px 0 17px;
+    }
+
+    .part-title h3 {
+      margin: 0 0 5px;
+      font-size: 16px;
+      color: var(--primary);
+    }
+
+    .part-title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .question {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      background: white;
+    }
+
+    .question-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .question-number {
+      font-size: 12px;
+      color: var(--secondary);
+      font-weight: 800;
+    }
+
+    .question-points {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .question-text {
+      font-size: 15px;
+      line-height: 1.65;
+      font-weight: 600;
+      margin-bottom: 17px;
+      white-space: pre-wrap;
+    }
+
+    /* ALTERNATIVAS */
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      margin-bottom: 9px;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .option:hover {
+      background: #F1F5FA;
+      border-color: var(--primary);
+    }
+
+    .option input {
+      margin-top: 3px;
+      accent-color: var(--secondary);
+    }
+
+    .answer-input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      outline: none;
+      background: white;
+    }
+
+    .answer-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(18, 59, 112, .1);
+    }
+
+    /* Listas desplegables compactas para completar párrafos */
+    .cloze-select {
+      width: auto;
+      min-width: 180px;
+      max-width: 100%;
+      display: inline-block;
+      margin: 4px 3px;
+      vertical-align: middle;
+    }
+
+    .cloze-paragraph,
+    .cloze-item {
+      font-size: 15px;
+      line-height: 1.8;
+      margin: 12px 0;
+    }
+
+    /* Cada espacio de completar se presenta como una oración independiente. */
+    .cloze-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 13px 14px;
+      margin: 10px 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #FAFCFF;
+    }
+
+    .cloze-number {
+      flex: 0 0 27px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 27px;
+      height: 27px;
+      border-radius: 50%;
+      background: #EAF1FA;
+      color: var(--primary);
+      font-weight: 800;
+      line-height: 1;
+      margin-top: 3px;
+    }
+
+    .cloze-sentence {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cloze-select {
+      min-width: 170px;
+      max-width: 100%;
+      padding: 9px 11px;
+      border: 2px solid #C9D7E8;
+      border-radius: 8px;
+      background: #FFFFFF;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .cloze-select:focus {
+      border-color: var(--primary);
+      outline: 3px solid rgba(18, 59, 112, .10);
+    }
+
+    @media (max-width: 600px) {
+      .cloze-item {
+        gap: 8px;
+        padding: 11px;
+      }
+
+      .cloze-select {
+        min-width: 145px;
+      }
+    }
+
+    /* ENVÍO */
+
+    .submit-area {
+      text-align: center;
+      padding: 25px 10px;
+    }
+
+    .submit-area p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* RESULTADOS */
+
+    .result {
+      text-align: center;
+    }
+
+    .result-icon {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 15px;
+      background: #e5f7ef;
+      color: var(--success);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 37px;
+    }
+
+    .score {
+      font-size: 54px;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 18px 0;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 25px 0;
+    }
+
+    .result-item {
+      background: #F1F5FA;
+      border-radius: 11px;
+      padding: 17px 8px;
+      border-bottom: 3px solid var(--secondary);
+    }
+
+    .result-item strong {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 7px;
+      color: var(--primary);
+    }
+
+    .result-item span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* PIE DE PÁGINA */
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 20px;
+      border-top: 2px solid #C62828;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 25px;
+      color: var(--muted);
+    }
+
+    /* DISEÑO RESPONSIVE */
+
+    @media(max-width: 650px) {
+      main {
+        margin-top: 20px;
+      }
+
+      .hero {
+        padding: 24px;
+      }
+
+      .hero h1 {
+        font-size: 23px;
+      }
+
+      .card {
+        padding: 19px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .result-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .top-label {
+        display: none;
+      }
+
+      .brand {
+        font-size: 16px;
+        gap: 10px;
+      }
+
+      .brand-logo {
+        width: 56px;
+        height: 56px;
+        flex-basis: 56px;
+      }
+
+      .brand small {
+        font-size: 9px;
+        letter-spacing: 1.4px;
+      }
+    }
+
+    /* PANEL DOCENTE Y RECTORÍA */
+    .teacher-access { text-align:center; margin:24px 0 8px; }
+    .teacher-access button { background:transparent; color:var(--primary); border:1px solid var(--border); padding:9px 15px; border-radius:8px; cursor:pointer; font-size:12px; }
+    .teacher-toolbar { display:flex; gap:12px; flex-wrap:wrap; align-items:end; margin:18px 0; }
+    .teacher-toolbar .field { flex:1; min-width:190px; margin:0; }
+    .teacher-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:18px 0; }
+    .teacher-stat { background:#F3F6FB; border:1px solid var(--border); border-radius:10px; padding:15px; }
+    .teacher-stat strong { display:block; color:var(--primary); font-size:23px; margin-bottom:4px; }
+    .teacher-stat span { color:var(--muted); font-size:12px; }
+    .table-wrap { width:100%; overflow-x:auto; border:1px solid var(--border); border-radius:10px; }
+    .teacher-table { width:100%; border-collapse:collapse; min-width:900px; font-size:13px; }
+    .teacher-table th { background:var(--primary); color:#fff; text-align:left; padding:12px 10px; white-space:nowrap; }
+    .teacher-table td { padding:11px 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .teacher-table tr:last-child td { border-bottom:0; }
+    .teacher-table tr:nth-child(even) td { background:#F8FAFD; }
+    .teacher-actions { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+    .teacher-muted { color:var(--muted); font-size:13px; line-height:1.5; }
+    @media (max-width:650px) { .teacher-summary { grid-template-columns:1fr; } .teacher-toolbar { display:block; } .teacher-toolbar .field { margin-bottom:12px; } }
+
+    /* Acceso docente destacado */
+    .teacher-access {
+      margin: 30px 0 12px;
+      display: flex;
+      justify-content: center;
+    }
+    .teacher-access-button {
+      width: min(100%, 440px);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      text-align: left;
+      color: #fff;
+      background: linear-gradient(135deg, #15365B, #24558E);
+      border: 1px solid #315F94;
+      border-bottom: 4px solid #B52835;
+      border-radius: 14px;
+      box-shadow: 0 7px 18px rgba(21, 54, 91, .20);
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    .teacher-access-button:hover {
+      background: linear-gradient(135deg, #0D2745, #1B477A);
+      box-shadow: 0 10px 22px rgba(21, 54, 91, .27);
+      transform: translateY(-2px);
+    }
+    .teacher-access-button:focus-visible {
+      outline: 3px solid rgba(181, 40, 53, .35);
+      outline-offset: 3px;
+    }
+    .teacher-access-icon {
+      width: 43px;
+      height: 43px;
+      flex: 0 0 43px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 12px;
+      font-size: 21px;
+    }
+    .teacher-access-copy { display: flex; flex: 1; flex-direction: column; gap: 4px; }
+    .teacher-access-copy strong { font-size: 14px; letter-spacing: .1px; }
+    .teacher-access-copy small { color: #DCE8F6; font-size: 11px; line-height: 1.4; }
+    .teacher-access-arrow { font-size: 29px; line-height: 1; opacity: .9; }
+
+    /* Campo de contraseña con opción mostrar/ocultar */
+    .password-input-wrap { position: relative; }
+    .password-input-wrap input {
+      width: 100%;
+      padding: 13px 88px 13px 14px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+    .password-input-wrap input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(18, 59, 112, .1);
+    }
+    .password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 9px;
+      transform: translateY(-50%);
+      border: 0;
+      border-radius: 7px;
+      padding: 7px 10px;
+      background: #EEF3F9;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .password-toggle:hover { background: #DFE9F4; }
+    .password-toggle:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    .password-hint { margin: 7px 0 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+  </style>
+
+  <style id="demo-professional-refresh">
+    :root {
+      --primary: #15365B;
+      --primary-dark: #0D2745;
+      --secondary: #B52835;
+      --secondary-dark: #921F2A;
+      --background: #F4F6F9;
+      --surface: #FFFFFF;
+      --text: #202C3B;
+      --muted: #697789;
+      --border: #DCE3EB;
+      --success: #147A55;
+      --danger: #B52835;
+      --radius: 18px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #F4F6F9;
+      color: #202C3B;
+      font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      letter-spacing: .005em;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select { font: inherit; }
+
+    .topbar {
+      position: relative;
+      padding: 18px max(4%, calc((100% - 1180px) / 2));
+      min-height: 98px;
+      background: linear-gradient(115deg, #102C4C 0%, #1B4774 100%);
+      border-bottom: 4px solid #B52835;
+      box-shadow: 0 5px 22px rgba(15, 38, 65, .16);
+    }
+    .brand { gap: 15px; font-size: 21px; letter-spacing: -.025em; }
+    .brand-logo {
+      width: 70px; height: 70px; flex-basis: 70px;
+      padding: 4px; border-radius: 15px;
+      border: 1px solid rgba(255,255,255,.8);
+      box-shadow: 0 5px 14px rgba(0,0,0,.17);
+    }
+    .brand small {
+      margin-top: 5px; font-size: 10px; letter-spacing: 2.3px;
+      font-weight: 600; opacity: .9;
+    }
+    .top-label {
+      font-size: 12px; font-weight: 600; letter-spacing: .09em;
+      text-transform: uppercase; color: #E4ECF5;
+    }
+
+    main { max-width: 1120px; width: min(92%, 1120px); margin: 38px auto 58px; }
+    .hero {
+      position: relative; overflow: hidden;
+      background: linear-gradient(118deg, #15365B 0%, #245582 100%);
+      border: 0; border-left: 5px solid #B52835;
+      border-radius: 20px; padding: 38px 42px; margin-bottom: 27px;
+      box-shadow: 0 12px 30px rgba(21, 54, 91, .13);
+    }
+    .hero:after {
+      content: ""; position: absolute; width: 230px; height: 230px;
+      right: -75px; top: -105px; border: 1px solid rgba(255,255,255,.13);
+      border-radius: 50%; box-shadow: 0 0 0 28px rgba(255,255,255,.035),
+      0 0 0 58px rgba(255,255,255,.025);
+      pointer-events: none;
+    }
+    .hero h1 {
+      position: relative; z-index: 1; margin: 0 0 11px;
+      max-width: 780px; font-size: clamp(25px, 3vw, 32px);
+      line-height: 1.2; letter-spacing: -.035em; font-weight: 750;
+    }
+    .hero p {
+      position: relative; z-index: 1; max-width: 720px;
+      margin: 0; color: #E5EDF6; font-size: 15px; line-height: 1.75;
+    }
+
+    .card {
+      padding: 30px 32px; margin-bottom: 22px;
+      border: 1px solid #E1E7EE; border-radius: 17px;
+      background: #fff;
+      box-shadow: 0 8px 26px rgba(23, 43, 67, .055);
+    }
+    .card h2 {
+      color: #15365B; font-size: 21px; line-height: 1.3;
+      letter-spacing: -.025em; font-weight: 750;
+    }
+    .description { color: #697789; font-size: 14px; line-height: 1.7; }
+
+    .grid { gap: 20px; }
+    .field { margin-bottom: 19px; }
+    .field label {
+      color: #34465B; font-size: 13px; font-weight: 700;
+      letter-spacing: .015em; margin-bottom: 8px;
+    }
+    .field input, .field select, .answer-input {
+      min-height: 48px; padding: 12px 15px;
+      border: 1px solid #D7E0E9; border-radius: 10px;
+      background: #FBFCFE; color: #202C3B;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    .field input:hover, .field select:hover, .answer-input:hover { border-color: #AEBECD; }
+    .field input:focus, .field select:focus, .answer-input:focus {
+      border-color: #285B8D; background: #fff;
+      box-shadow: 0 0 0 4px rgba(40, 91, 141, .11);
+    }
+
+    .btn {
+      min-height: 47px; padding: 13px 22px; border-radius: 10px;
+      font-size: 14px; font-weight: 700; letter-spacing: .01em;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(110deg, #15365B, #245582);
+      box-shadow: 0 5px 13px rgba(21, 54, 91, .16);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(110deg, #0D2745, #1B4774);
+      box-shadow: 0 7px 17px rgba(21, 54, 91, .22);
+      transform: translateY(-1px);
+    }
+    .btn-secondary { background: #F8EDEF; color: #A32330; }
+    .btn-home {
+      color: #fff; background: #B52835; margin-top: 15px;
+      box-shadow: 0 5px 13px rgba(181, 40, 53, .15);
+    }
+    .btn-home:hover { background: #921F2A; transform: translateY(-1px); }
+
+    .message { border-radius: 10px; padding: 14px 16px; }
+    .student-summary {
+      background: #F5F8FB; border: 1px solid #E0E7EF;
+      border-radius: 12px; padding: 18px 20px;
+    }
+    .student-summary strong { color: #213B58; font-size: 15px; }
+    .student-summary span { color: #697789; }
+    .badge {
+      background: #F8EDEF; color: #A32330;
+      padding: 7px 13px; border-radius: 30px;
+      font-size: 11px; letter-spacing: .045em; text-transform: uppercase;
+      font-weight: 800;
+    }
+    .evaluation-header h2 { font-size: 24px; letter-spacing: -.03em; }
+
+    .part-title {
+      padding: 18px 20px; background: #F1F5F9;
+      border-left: 4px solid #B52835; border-radius: 10px;
+      margin: 30px 0 18px;
+    }
+    .part-title h3 { font-size: 16px; font-weight: 750; }
+    .question {
+      padding: 23px 24px; margin-bottom: 17px;
+      border: 1px solid #E0E6ED; border-radius: 13px;
+      background: #fff; box-shadow: 0 3px 12px rgba(26, 48, 73, .035);
+    }
+    .question-number {
+      color: #A32330; font-size: 11px; letter-spacing: .07em;
+      text-transform: uppercase; font-weight: 800;
+    }
+    .question-text {
+      color: #26384C; font-size: 15px; line-height: 1.75;
+      font-weight: 650;
+    }
+    .option {
+      padding: 13px 15px; border: 1px solid #DFE6ED;
+      border-radius: 10px; background: #FCFDFE;
+      color: #35465A; transition: .18s ease;
+    }
+    .option:hover { background: #F2F6FA; border-color: #8FA8C1; }
+    .option input { accent-color: #B52835; }
+    .submit-area {
+      margin-top: 28px; padding: 25px 18px 10px;
+      border-top: 1px solid #E6EBF0;
+    }
+    .submit-area p { color: #718094; line-height: 1.7; }
+
+    .result-icon { box-shadow: 0 0 0 8px #F0FAF5; }
+    .score {
+      color: #15365B; font-size: clamp(48px, 7vw, 60px);
+      letter-spacing: -.05em; font-weight: 800;
+    }
+    .result-item {
+      background: #F5F8FB; border: 1px solid #E5EBF1;
+      border-bottom: 3px solid #B52835; border-radius: 12px;
+      padding: 19px 10px;
+    }
+    .result-item strong { font-size: 24px; color: #15365B; }
+    .result-item span { color: #697789; font-size: 11px; font-weight: 600; }
+
+    .footer {
+      margin-top: 34px; padding: 22px 15px;
+      border-top: 1px solid #DCE3EB;
+      color: #7A8796; font-size: 11px; letter-spacing: .055em;
+      text-transform: uppercase;
+    }
+
+    :focus-visible { outline: 3px solid rgba(181,40,53,.35); outline-offset: 2px; }
+    @media (max-width: 650px) {
+      .topbar { padding: 14px 4%; min-height: 82px; }
+      .brand { font-size: 16px; gap: 11px; }
+      .brand-logo { width: 56px; height: 56px; flex-basis: 56px; }
+      .brand small { font-size: 8px; letter-spacing: 1.3px; }
+      main { width: 92%; margin: 23px auto 38px; }
+      .hero { padding: 26px 23px; border-radius: 16px; }
+      .hero h1 { font-size: 24px; }
+      .hero p { font-size: 14px; }
+      .card { padding: 22px 19px; border-radius: 14px; }
+      .grid { grid-template-columns: 1fr; gap: 0; }
+      .question { padding: 18px 16px; }
+      .result-grid { grid-template-columns: repeat(2, 1fr); }
+      .top-label { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+    /* ===== TÉRMINOS PAREADOS (tabla término / definición) ===== */
+.pair-card {
+  background: #fff;
+  border: 1px solid #E0E6ED;
+  border-radius: 18px;
+  padding: 22px 20px 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 12px rgba(26, 48, 73, .05);
+}
+
+.pair-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding-bottom: 12px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #DCE3EB;
+}
+
+.pair-head h3 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #26384C;
+}
+
+.pair-head span {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.pair-row {
+  display: grid;
+  grid-template-columns: 84px minmax(180px, 1fr) minmax(220px, 1.3fr);
+  align-items: center;
+  column-gap: 26px;
+  padding: 8px 0;
+  border-bottom: 1px dashed #DCE3EB;
+  min-height: 58px;
+}
+
+.pair-row:last-child {
+  border-bottom: 0;
+}
+
+.pair-select {
+  width: 72px;
+  height: 42px;
+  padding: 0 8px;
+  border: 1px solid #D7E0E9;
+  border-radius: 10px;
+  background: #fff;
+  color: #B52835;
+  font-weight: 800;
+  font-size: 15px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+}
+
+.pair-select:hover {
+  border-color: #AEBECD;
+}
+
+.pair-select:focus {
+  border-color: #15365B;
+  box-shadow: 0 0 0 3px rgba(21, 54, 91, .15);
+}
+
+.pair-select.answered {
+  background: #F2F6FA;
+  border-color: #8FA8C1;
+}
+
+.pair-term {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2d3d;
+}
+
+.pair-term .pair-num {
+  display: inline-block;
+  min-width: 26px;
+  margin-right: 8px;
+  color: #697789;
+  font-weight: 800;
+}
+
+.pair-def {
+  font-size: 14px;
+  line-height: 1.45;
+  color: #26384C;
+}
+
+.pair-def strong {
+  color: #15365B;
+  margin-right: 3px;
+}
+
+@media (max-width: 650px) {
+  .pair-card {
+    padding: 18px 14px 8px;
+  }
+
+  .pair-row {
+    grid-template-columns: 76px 1fr;
+    row-gap: 4px;
+    padding: 12px 0;
+  }
+
+  .pair-def {
+    grid-column: 1 / -1;
+    padding-left: 2px;
+  }
+}
+  </style>
+
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <div class="brand">
+    <div class="brand-logo" aria-hidden="true">EO</div>
+
+    <div>
+      Sistema de Evaluación Online
+      <small>PLATAFORMA DEMOSTRATIVA</small>
+    </div>
+  </div>
+
+  <div class="top-label">
+    Sistema de evaluación académica
+  </div>
+
+</header>
+
+<main>
+
+  <section class="hero">
+    <h1>Bienvenido al Sistema de Evaluación Online</h1>
+    <p>
+      Plataforma de evaluación académica.
+      Ingresa tus datos para acceder a las evaluaciones
+      asignadas por tu establecimiento.
+    </p>
+  </section>
+
+  <!-- IDENTIFICACIÓN DEL ESTUDIANTE -->
+
+  <section id="loginSection" class="card">
+
+    <h2>Identificación del estudiante</h2>
+
+    <p class="description">
+      Completa tus datos personales para validar tu identidad
+      y consultar las evaluaciones disponibles.
+    </p>
+
+    <div class="grid">
+
+      <div class="field">
+        <label for="nombres">Nombres</label>
+        <input
+          id="nombres"
+          type="text"
+          placeholder="Ingresa tus nombres"
+          autocomplete="given-name"
+        >
+      </div>
+
+      <div class="field">
+        <label for="apellidos">Apellidos</label>
+        <input
+          id="apellidos"
+          type="text"
+          placeholder="Ingresa tus apellidos"
+          autocomplete="family-name"
+        >
+      </div>
+
+    </div>
+
+    <div class="field">
+      <label for="curso">Curso</label>
+      <select id="curso">
+        <option value="">Cargando cursos...</option>
+      </select>
+    </div>
+
+    <div id="loginMessage" class="message"></div>
+
+    <button
+      id="validateButton"
+      class="btn btn-primary full"
+      onclick="validarDatos()"
+    >
+      Validar estudiante
+    </button>
+
+  </section>
+
+  <!-- SELECCIÓN DE EVALUACIÓN -->
+
+  <section id="evaluationSelection" class="card hidden">
+
+    <h2>Evaluaciones disponibles</h2>
+
+    <p class="description">
+      Selecciona la evaluación que debes realizar.
+    </p>
+
+    <div class="student-summary">
+      <div>
+        <strong id="studentName"></strong>
+        <span id="studentCourse"></span>
+      </div>
+
+      <span class="badge">Estudiante validado</span>
+    </div>
+
+    <div class="field">
+      <label for="evaluationSelect">Seleccionar evaluación</label>
+
+      <select id="evaluationSelect">
+        <option value="">Selecciona una evaluación</option>
+      </select>
+    </div>
+
+    <div id="evaluationMessage" class="message"></div>
+
+    <button
+      id="startButton"
+      class="btn btn-primary full"
+      onclick="iniciarEvaluacion()"
+    >
+      Comenzar evaluación
+    </button>
+
+  </section>
+
+  <!-- EVALUACIÓN -->
+
+  <section id="examSection" class="hidden">
+
+    <div class="card">
+
+      <div class="student-summary">
+
+        <div>
+          <strong id="examStudent"></strong>
+          <span id="examCourse"></span>
+        </div>
+
+        <span class="badge" id="examLevel"></span>
+
+      </div>
+
+      <div class="evaluation-header">
+
+        <h2 id="examTitle"></h2>
+
+        <span class="badge" id="questionCount"></span>
+
+      </div>
+
+      <p class="description">
+        Lee cuidadosamente cada pregunta y selecciona
+        o escribe tu respuesta.
+      </p>
+
+      <div id="questionsContainer"></div>
+
+      <div id="examMessage" class="message"></div>
+
+      <div class="submit-area">
+
+        <button
+          id="submitButton"
+          class="btn btn-primary"
+          onclick="enviarRespuestas()"
+        >
+          Finalizar y revisar evaluación
+        </button>
+
+        <p>
+          Revisa tus respuestas antes de finalizar.
+          Una vez enviada, la evaluación será corregida
+          y registrada en el sistema.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- RESULTADOS -->
+
+  <section id="resultSection" class="card hidden">
+
+    <div class="result">
+
+      <div class="result-icon">✓</div>
+
+      <h2>Evaluación finalizada</h2>
+
+      <p class="description">
+        Tu evaluación fue procesada correctamente.
+      </p>
+
+      <div class="score" id="resultPercentage">0%</div>
+
+      <div class="badge" id="resultLevel"></div>
+
+      <div class="result-grid">
+
+        <div class="result-item">
+          <strong id="resultScore">0</strong>
+          <span>Puntaje obtenido</span>
+        </div>
+
+        <div class="result-item">
+          <strong id="resultMax">0</strong>
+          <span>Puntaje máximo</span>
+        </div>
+
+        <div class="result-item">
+          <strong id="resultGrade">0.0</strong>
+          <span>Nota</span>
+        </div>
+
+        <div class="result-item">
+          <strong id="resultCorrect">0</strong>
+          <span>Respuestas correctas</span>
+        </div>
+
+      </div>
+
+      <p id="resultMessage" class="description"></p>
+
+      <p>
+        Tu resultado ha sido registrado en Sistema de Evaluación Online.
+      </p>
+
+      <button
+        id="homeButton"
+        class="btn btn-home"
+        onclick="volverAlInicio()"
+      >
+        ↩ Volver al inicio
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- ACCESO EXCLUSIVO DOCENTES Y RECTORÍA -->
+  <section id="teacherLoginSection" class="card hidden">
+    <h2>Acceso para docentes y rectoría</h2>
+    <p class="description">Ingresa la contraseña institucional exclusiva para consultar los resultados académicos. Esta sesión se cierra automáticamente después de 30 minutos.</p>
+    <div class="field">
+      <label for="teacherPassword">Contraseña de acceso</label>
+      <div class="password-input-wrap">
+        <input id="teacherPassword" type="password" autocomplete="current-password" placeholder="Ingresa la contraseña docente">
+        <button
+          type="button"
+          id="toggleTeacherPassword"
+          class="password-toggle"
+          onclick="alternarVisibilidadContrasenaDocente()"
+          aria-label="Mostrar contraseña"
+          aria-pressed="false"
+        >Mostrar</button>
+      </div>
+      <p class="password-hint">Puedes mostrar la contraseña para comprobar que esté escrita correctamente.</p>
+    </div>
+    <div id="teacherLoginMessage" class="message"></div>
+    <button id="teacherLoginButton" class="btn btn-primary" onclick="iniciarSesionDocente()">Ingresar al panel</button>
+    <button class="btn btn-secondary" onclick="volverAlInicio()">Volver al acceso de estudiantes</button>
+  </section>
+
+  <section id="teacherDashboardSection" class="card hidden">
+    <div class="teacher-actions">
+      <div>
+        <h2>Panel de resultados académicos</h2>
+        <p class="teacher-muted">Consulta los intentos registrados, identifica a cada estudiante y filtra por curso o nombre.</p>
+      </div>
+      <button class="btn btn-secondary" onclick="cerrarSesionDocenteUI()">Cerrar sesión</button>
+    </div>
+    <div class="teacher-summary">
+      <div class="teacher-stat"><strong id="teacherTotal">0</strong><span>Evaluaciones registradas</span></div>
+      <div class="teacher-stat"><strong id="teacherAverage">0%</strong><span>Promedio general de logro</span></div>
+      <div class="teacher-stat"><strong id="teacherStudents">0</strong><span>Estudiantes identificados</span></div>
+    </div>
+    <div class="teacher-toolbar">
+      <div class="field">
+        <label for="teacherCourseFilter">Filtrar por curso</label>
+        <select id="teacherCourseFilter" onchange="filtrarResultadosDocente()"><option value="">Todos los cursos</option></select>
+      </div>
+      <div class="field">
+        <label for="teacherStudentFilter">Buscar estudiante</label>
+        <input id="teacherStudentFilter" type="search" placeholder="Escribe nombre o apellido" oninput="filtrarResultadosDocente()">
+      </div>
+    </div>
+    <div id="teacherResultsMessage" class="message"></div>
+    <div class="table-wrap">
+      <table class="teacher-table">
+        <thead><tr><th>Fecha</th><th>Curso</th><th>Estudiante</th><th>Evaluación</th><th>Puntaje</th><th>Porcentaje</th><th>Nota</th><th>Nivel</th><th>ID</th></tr></thead>
+        <tbody id="teacherResultsBody"><tr><td colspan="9">No hay datos para mostrar.</td></tr></tbody>
+      </table>
+    </div>
+    <p class="teacher-muted" id="teacherRowsInfo"></p>
+  </section>
+
+  <div class="teacher-access">
+    <button type="button" class="teacher-access-button" onclick="mostrarAccesoDocente()">
+      <span class="teacher-access-icon" aria-hidden="true">🔐</span>
+      <span class="teacher-access-copy">
+        <strong>Acceso para docentes y rectoría</strong>
+        <small>Ingresar al panel de resultados académicos</small>
+      </span>
+      <span class="teacher-access-arrow" aria-hidden="true">›</span>
+    </button>
+  </div>
+
+  <div class="footer">
+    Sistema de Evaluación Online · Plataforma de evaluación académica
+  </div>
+
+</main>
+
+<script>
+
+/* =====================================================
+   VARIABLES DEL SISTEMA
+===================================================== */
+
+let estudianteActual = null;
+let evaluacionActual = null;
+let preguntasActuales = [];
+let evaluacionesDisponibles = [];
+let sesionDocenteToken = null;
+let resultadosDocente = [];
+let temporizadorSesionDocente = null;
+
+
+/* =====================================================
+   COMUNICACIÓN CON GOOGLE APPS SCRIPT
+===================================================== */
+
+function mostrarMensaje(id, texto, tipo) {
+
+  const elemento = document.getElementById(id);
+
+  elemento.textContent = texto;
+  elemento.className = "message " + tipo;
+
+}
+
+
+function ocultarMensaje(id) {
+
+  const elemento = document.getElementById(id);
+
+  elemento.textContent = "";
+  elemento.className = "message";
+
+}
+
+
+function mostrarSeccion(id) {
+
+  document.querySelectorAll(
+    "#loginSection, #evaluationSelection, #examSection, #resultSection, #teacherLoginSection, #teacherDashboardSection"
+  ).forEach(elemento => {
+
+    elemento.classList.add("hidden");
+
+  });
+
+  document.getElementById(id).classList.remove("hidden");
+
+}
+
+
+function escaparHTML(valor) {
+
+  return String(valor ?? "").replace(
+    /[&<>"']/g,
+    caracter => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[caracter]
+  );
+
+}
+
+
+/* =====================================================
+   CARGAR CURSOS
+===================================================== */
+
+function cargarCursos() {
+
+  google.script.run
+
+    .withSuccessHandler(cursos => {
+
+      const select = document.getElementById("curso");
+
+      select.innerHTML =
+        '<option value="">Selecciona tu curso</option>';
+
+      if (!Array.isArray(cursos) || cursos.length === 0) {
+
+        select.innerHTML =
+          '<option value="">No hay cursos disponibles</option>';
+
+        return;
+
+      }
+
+      cursos.forEach(curso => {
+
+        const opcion = document.createElement("option");
+
+        opcion.value = curso;
+        opcion.textContent = curso;
+
+        select.appendChild(opcion);
+
+      });
+
+    })
+
+    .withFailureHandler(error => {
+
+      mostrarMensaje(
+        "loginMessage",
+        "No fue posible cargar los cursos: " + error.message,
+        "error"
+      );
+
+    })
+
+    .obtenerCursosParaIngreso();
+
+}
+
+
+/* =====================================================
+   VALIDAR ESTUDIANTE
+===================================================== */
+
+function validarDatos() {
+
+  const apellidos = document
+    .getElementById("apellidos")
+    .value.trim();
+
+  const nombres = document
+    .getElementById("nombres")
+    .value.trim();
+
+  const curso = document
+    .getElementById("curso")
+    .value;
+
+  if (!apellidos || !nombres || !curso) {
+
+    mostrarMensaje(
+      "loginMessage",
+      "Debes completar todos los campos.",
+      "error"
+    );
+
+    return;
+
+  }
+
+  const boton = document.getElementById("validateButton");
+
+  boton.disabled = true;
+  boton.textContent = "Validando...";
+
+  ocultarMensaje("loginMessage");
+
+  google.script.run
+
+    .withSuccessHandler(resultado => {
+
+      boton.disabled = false;
+      boton.textContent = "Validar estudiante";
+
+      if (!resultado.correcto) {
+
+        mostrarMensaje(
+          "loginMessage",
+          resultado.mensaje,
+          "error"
+        );
+
+        return;
+
+      }
+
+      estudianteActual = resultado.estudiante;
+
+      document.getElementById("studentName").textContent =
+        estudianteActual.apellidos + " " +
+        estudianteActual.nombres;
+
+      document.getElementById("studentCourse").textContent =
+        estudianteActual.curso;
+
+      cargarEvaluaciones();
+
+    })
+
+    .withFailureHandler(error => {
+
+      boton.disabled = false;
+      boton.textContent = "Validar estudiante";
+
+      mostrarMensaje(
+        "loginMessage",
+        error.message,
+        "error"
+      );
+
+    })
+
+    .validarEstudiante(
+      apellidos,
+      nombres,
+      curso
+    );
+
+}
+
+
+/* =====================================================
+   CARGAR EVALUACIONES
+===================================================== */
+
+function cargarEvaluaciones() {
+
+  mostrarMensaje(
+    "loginMessage",
+    "Estudiante validado. Consultando evaluaciones...",
+    "info"
+  );
+
+  google.script.run
+
+    .withSuccessHandler(evaluaciones => {
+
+      evaluacionesDisponibles = (
+        Array.isArray(evaluaciones) ? evaluaciones : []
+      ).filter(evaluacion =>
+
+        cursosCompatibles(evaluacion.curso, estudianteActual.curso)
+
+      );
+
+      const select = document.getElementById("evaluationSelect");
+
+      select.innerHTML =
+        '<option value="">Selecciona una evaluación</option>';
+
+      evaluacionesDisponibles.forEach(evaluacion => {
+
+        const opcion = document.createElement("option");
+
+        opcion.value = evaluacion.evaluacionId;
+
+        opcion.textContent =
+          evaluacion.titulo + " · " + evaluacion.nivel;
+
+        select.appendChild(opcion);
+
+      });
+
+      mostrarSeccion("evaluationSelection");
+
+      if (evaluacionesDisponibles.length === 0) {
+
+        mostrarMensaje(
+          "evaluationMessage",
+          "No hay evaluaciones publicadas para tu curso.",
+          "info"
+        );
+
+      } else {
+
+        ocultarMensaje("evaluationMessage");
+
+      }
+
+    })
+
+    .withFailureHandler(error => {
+
+      mostrarMensaje(
+        "loginMessage",
+        "Error al consultar evaluaciones: " + error.message,
+        "error"
+      );
+
+    })
+
+    .obtenerEvaluacionesPublicadas();
+
+}
+
+
+/* =====================================================
+   NORMALIZACIÓN DE TEXTO
+===================================================== */
+
+function normalizar(valor) {
+
+  return String(valor || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+}
+
+
+/*
+ * Permite que una evaluación general del nivel, por ejemplo 3° básico,
+ * aparezca a estudiantes de una sección, por ejemplo 3° básico A.
+ * Si ambos nombres indican sección, exige que sea la misma.
+ */
+function cursosCompatibles(cursoEvaluacion, cursoEstudiante) {
+
+  const separar = valor => {
+    const texto = normalizar(valor).replace(/º/g, "°");
+    const coincidencia = texto.match(/^(.*?)(?:\s+([a-z]))?$/i);
+    return {
+      base: (coincidencia ? coincidencia[1] : texto).trim(),
+      seccion: coincidencia && coincidencia[2] ? coincidencia[2].toLowerCase() : ""
+    };
+  };
+
+  const evaluacion = separar(cursoEvaluacion);
+  const estudiante = separar(cursoEstudiante);
+
+  if (!evaluacion.base || evaluacion.base !== estudiante.base) {
+    return false;
+  }
+
+  return !(evaluacion.seccion && estudiante.seccion) ||
+    evaluacion.seccion === estudiante.seccion;
+
+}
+
+
+/* =====================================================
+   INICIAR EVALUACIÓN
+===================================================== */
+
+function iniciarEvaluacion() {
+
+  const evaluacionId = document
+    .getElementById("evaluationSelect")
+    .value;
+
+  if (!evaluacionId) {
+
+    mostrarMensaje(
+      "evaluationMessage",
+      "Debes seleccionar una evaluación.",
+      "error"
+    );
+
+    return;
+
+  }
+
+  const boton = document.getElementById("startButton");
+
+  boton.disabled = true;
+  boton.textContent = "Cargando evaluación...";
+
+  google.script.run
+
+    .withSuccessHandler(resultado => {
+
+      boton.disabled = false;
+      boton.textContent = "Comenzar evaluación";
+
+      if (!resultado.correcto) {
+
+        mostrarMensaje(
+          "evaluationMessage",
+          resultado.mensaje,
+          "error"
+        );
+
+        return;
+
+      }
+
+      estudianteActual = resultado.estudiante;
+      evaluacionActual = resultado.evaluacion;
+      preguntasActuales = resultado.preguntas;
+
+      mostrarEvaluacion();
+
+    })
+
+    .withFailureHandler(error => {
+
+      boton.disabled = false;
+      boton.textContent = "Comenzar evaluación";
+
+      mostrarMensaje(
+        "evaluationMessage",
+        error.message,
+        "error"
+      );
+
+    })
+
+    .obtenerEvaluacionPublica(
+      estudianteActual.apellidos,
+      estudianteActual.nombres,
+      estudianteActual.curso,
+      evaluacionId
+    );
+
+}
+
+
+/* =====================================================
+   MOSTRAR EVALUACIÓN
+===================================================== */
+
+/* =====================================================
+   MOSTRAR EVALUACIÓN
+===================================================== */
+
+function esPareado(pregunta) {
+  return normalizar(pregunta.tipo) === "pareados";
+}
+
+/* Extrae el término desde: Relaciona el término «X» con su definición correcta. */
+function extraerTermino(pregunta) {
+  const coincidencia = String(pregunta.enunciado || "").match(/«(.+?)»/);
+  return coincidencia ? coincidencia[1] : String(pregunta.enunciado || "");
+}
+
+function mostrarEvaluacion() {
+
+  document.getElementById("examStudent").textContent =
+    estudianteActual.apellidos + " " + estudianteActual.nombres;
+
+  document.getElementById("examCourse").textContent =
+    estudianteActual.curso;
+
+  document.getElementById("examTitle").textContent =
+    evaluacionActual.titulo;
+
+  document.getElementById("examLevel").textContent =
+    evaluacionActual.nivel;
+
+  document.getElementById("questionCount").textContent =
+    preguntasActuales.length + " preguntas";
+
+  const contenedor = document.getElementById("questionsContainer");
+  contenedor.innerHTML = "";
+
+  let parteActual = "";
+  let i = 0;
+
+  while (i < preguntasActuales.length) {
+
+    const pregunta = preguntasActuales[i];
+    const parte = pregunta.parte || "Evaluación";
+
+    /* Encabezado de parte */
+    if (parte !== parteActual) {
+
+      parteActual = parte;
+
+      const encabezado = document.createElement("div");
+      encabezado.className = "part-title";
+
+      const esParteCFormal =
+        /^C\./i.test(String(parte)) &&
+        normalizar(pregunta.asignatura).includes("vocabulario formal");
+
+      const subtitulo = esPareado(pregunta)
+        ? "Elige en cada recuadro la letra de la definición que corresponde al término."
+        : (esParteCFormal
+            ? "Lee cada definición y selecciona la palabra correcta entre las 13 palabras del vocabulario formal de tu nivel."
+            : (pregunta.asignatura || ""));
+
+      encabezado.innerHTML = `
+        <h3>${escaparHTML(parte)}</h3>
+        <p>${escaparHTML(subtitulo)}</p>
+      `;
+
+      contenedor.appendChild(encabezado);
+
+    }
+
+    /* ---------- BLOQUE ÚNICO DE COMPLETAR CON BANCO ---------- */
+    if (normalizar(pregunta.tipo) === "cloze" || normalizar(pregunta.tipo) === "completar") {
+
+      const grupo = [pregunta];
+      let j = i + 1;
+
+      while (
+        j < preguntasActuales.length &&
+        ["cloze", "completar"].includes(normalizar(preguntasActuales[j].tipo)) &&
+        (preguntasActuales[j].parte || "Evaluación") === parte &&
+        (preguntasActuales[j].asignatura || "") === (pregunta.asignatura || "") &&
+        JSON.stringify((preguntasActuales[j].opciones || []).map(o => normalizar(o.texto || o.codigo))) ===
+          JSON.stringify((pregunta.opciones || []).map(o => normalizar(o.texto || o.codigo)))
+      ) {
+        grupo.push(preguntasActuales[j]);
+        j++;
+      }
+
+      contenedor.appendChild(crearBloqueCloze(grupo));
+      i = j;
+      continue;
+
+    }
+
+    /* ---------- BLOQUE DE TÉRMINOS PAREADOS ---------- */
+    if (esPareado(pregunta)) {
+
+      const grupo = [pregunta];
+      let j = i + 1;
+
+      while (
+        j < preguntasActuales.length &&
+        esPareado(preguntasActuales[j]) &&
+        (preguntasActuales[j].parte || "Evaluación") === parte &&
+        (preguntasActuales[j].asignatura || "") === (pregunta.asignatura || "")
+      ) {
+        grupo.push(preguntasActuales[j]);
+        j++;
+      }
+
+      contenedor.appendChild(crearBloquePareados(grupo));
+
+      i = j;
+      continue;
+
+    }
+
+    /* ---------- PREGUNTA NORMAL ---------- */
+    const tarjeta = document.createElement("div");
+    tarjeta.className = "question";
+
+    tarjeta.innerHTML = `
+
+      <div class="question-top">
+        <span class="question-number">PREGUNTA ${i + 1}</span>
+        <span class="question-points">
+          ${escaparHTML(pregunta.puntaje)} punto(s)
+        </span>
+      </div>
+
+      <div class="question-text">${escaparHTML(pregunta.enunciado)}</div>
+
+      ${/^C\./i.test(String(parte)) && normalizar(pregunta.asignatura).includes("vocabulario formal")
+        ? '<p class="description">Selecciona la palabra que corresponde a esta definición.</p>'
+        : ''}
+
+      <div id="answer_${escaparHTML(pregunta.preguntaId)}"></div>
+
+    `;
+
+    contenedor.appendChild(tarjeta);
+    mostrarControlRespuesta(pregunta);
+
+    i++;
+
+  }
+
+  mostrarSeccion("examSection");
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+}
+
+
+/* =====================================================
+   BLOQUE DE COMPLETAR CON BANCO DE PALABRAS
+===================================================== */
+
+function crearBloqueCloze(grupo) {
+
+  const tarjeta = document.createElement("div");
+  tarjeta.className = "question cloze-card";
+
+  /* ---------- Banco de palabras ---------- */
+  const banco = [];
+  grupo.forEach(p => (p.opciones || []).forEach(o => {
+    const palabra = String(o.texto || o.codigo || "").trim();
+    if (palabra && !banco.some(x => normalizar(x) === normalizar(palabra))) {
+      banco.push(palabra);
+    }
+  }));
+
+  if (!banco.length) {
+    grupo.forEach(p => {
+      const match = String(p.enunciado || "").match(/Banco de palabras:\s*([^\n]+)/i);
+      if (match) {
+        match[1].split(/[·,;]/).map(x => x.trim()).filter(Boolean).forEach(x => {
+          if (!banco.some(y => normalizar(y) === normalizar(x))) banco.push(x);
+        });
+      }
+    });
+  }
+
+  const opcionesHTML = banco
+    .map(p => `<option value="${escaparHTML(p)}">${escaparHTML(p)}</option>`)
+    .join("");
+
+  const crearSelect = (pregunta, numero) => `
+    <select class="answer-input cloze-select"
+      id="input_${escaparHTML(pregunta.preguntaId)}"
+      aria-label="Respuesta ${numero}">
+      <option value="">Elige una palabra</option>
+      ${opcionesHTML}
+    </select>
+  `;
+
+  /* ---------- Limpieza de enunciados ---------- */
+  const MARCA = /\(\s*\d+\s*\)|_{2,}|\.{3,}/g;
+
+  const limpiar = texto => String(texto || "")
+    .replace(/^Banco de palabras:[^\n]*(?:\n\n)?/i, "")
+    .replace(/^\s*Lee el texto y completa el espacio indicado:\s*/i, "")
+    // quita el número que la base agrega al final: "... leído. (3)"
+    .replace(/([.!?…])\s*\(\s*\d+\s*\)\s*$/, "$1")
+    .trim();
+
+  const enunciados = grupo.map(p => limpiar(p.enunciado));
+
+  const compartido =
+    enunciados.length > 1 &&
+    enunciados.every(x => normalizar(x) === normalizar(enunciados[0]));
+
+  let html = `
+    <div class="question-top">
+      <span class="question-number">${escaparHTML(grupo[0].asignatura || "Completar")}</span>
+      <span class="question-points">${grupo.reduce((s, p) => s + Number(p.puntaje || 0), 0)} punto(s)</span>
+    </div>
+    <p><strong>Banco de palabras:</strong> ${banco.map(escaparHTML).join(" · ")}</p>
+    <p>Lee cada oración y elige la palabra que completa correctamente el espacio.</p>
+    <div class="cloze-content">
+  `;
+
+  if (compartido) {
+
+    /* Un solo párrafo para todas las preguntas: se separa en oraciones
+       y el n-ésimo espacio recibe el desplegable de la n-ésima pregunta. */
+    const oraciones = enunciados[0].match(/[^.!?]+(?:[.!?]+|$)/g) || [enunciados[0]];
+    let contador = 0;
+
+    oraciones.forEach(original => {
+      let oracion = escaparHTML(original.trim());
+      if (!oracion) return;
+
+      let enEstaFila = 0;
+      let primero = null;
+
+      oracion = oracion.replace(MARCA, () => {
+        const pregunta = grupo[contador];
+        contador++;
+        enEstaFila++;
+        if (primero === null) primero = contador;
+        return pregunta ? crearSelect(pregunta, contador) : "";
+      });
+
+      if (enEstaFila > 0) {
+        html += `
+          <div class="cloze-item">
+            <span class="cloze-number">${primero}.</span>
+            <div class="cloze-sentence">${oracion}</div>
+          </div>
+        `;
+      } else {
+        html += `<p class="cloze-paragraph">${oracion}</p>`;
+      }
+    });
+
+  } else {
+
+    /* Cada pregunta trae su propia oración */
+    grupo.forEach((pregunta, indice) => {
+      let texto = escaparHTML(enunciados[indice]);
+      const select = crearSelect(pregunta, indice + 1);
+
+      if (/\(\s*\d+\s*\)|_{2,}|\.{3,}/.test(texto)) {
+        texto = texto.replace(/\(\s*\d+\s*\)|_{2,}|\.{3,}/, select);
+      } else {
+        texto += " " + select;
+      }
+
+      html += `
+        <div class="cloze-item">
+          <span class="cloze-number">${indice + 1}.</span>
+          <div class="cloze-sentence">${texto}</div>
+        </div>
+      `;
+    });
+
+  }
+
+  html += "</div>";
+  tarjeta.innerHTML = html;
+  return tarjeta;
+}
+/* =====================================================
+   BLOQUE DE PAREADOS (formato tabla)
+===================================================== */
+
+function crearBloquePareados(grupo) {
+
+  const tarjeta = document.createElement("div");
+  tarjeta.className = "pair-card";
+
+  const totalPuntos = grupo.reduce(
+    (suma, p) => suma + Number(p.puntaje || 0), 0
+  );
+
+  /* Las definiciones son las mismas para todas las preguntas del grupo */
+  const definiciones = grupo[0].opciones || [];
+
+  let html = `
+    <div class="pair-head">
+      <h3>${escaparHTML(grupo[0].asignatura || "Términos pareados")}</h3>
+      <span>${totalPuntos} punto(s)</span>
+    </div>
+  `;
+
+  grupo.forEach((pregunta, indice) => {
+
+    const definicion = definiciones[indice];
+
+    let opciones = '<option value="">·</option>';
+
+    definiciones.forEach(opcion => {
+      opciones += `
+        <option value="${escaparHTML(opcion.codigo)}">
+          ${escaparHTML(opcion.codigo)}
+        </option>
+      `;
+    });
+
+    html += `
+      <div class="pair-row">
+
+        <select
+          class="pair-select"
+          id="input_${escaparHTML(pregunta.preguntaId)}"
+          aria-label="Respuesta para ${escaparHTML(extraerTermino(pregunta))}"
+          onchange="this.classList.toggle('answered', this.value !== '')"
+        >
+          ${opciones}
+        </select>
+
+        <div class="pair-term">
+          <span class="pair-num">${indice + 1}.</span>${escaparHTML(extraerTermino(pregunta))}
+        </div>
+
+        <div class="pair-def">
+          ${definicion
+            ? `<strong>${escaparHTML(definicion.codigo)}.</strong> ${escaparHTML(definicion.texto)}`
+            : ""}
+        </div>
+
+      </div>
+    `;
+
+  });
+
+  tarjeta.innerHTML = html;
+
+  return tarjeta;
+
+}
+
+/* =====================================================
+   CONTROLES DE RESPUESTA
+===================================================== */
+
+function mostrarControlRespuesta(pregunta) {
+
+  const contenedor = document.getElementById(
+    "answer_" + pregunta.preguntaId
+  );
+
+  const tipo = normalizar(pregunta.tipo);
+
+  /*
+   * PREGUNTAS DE COMPLETAR / CLOZE
+   */
+
+  if (
+    tipo === "cloze" ||
+    tipo === "completar" ||
+    tipo === "texto"
+  ) {
+
+    contenedor.innerHTML = `
+
+      <input
+        type="text"
+        class="answer-input"
+        id="input_${escaparHTML(pregunta.preguntaId)}"
+        placeholder="Escribe tu respuesta"
+        autocomplete="off"
+      >
+
+    `;
+
+    return;
+
+  }
+
+
+  /*
+   * PREGUNTAS DE PAREADOS
+   */
+
+  if (tipo === "pareados") {
+
+    let opciones = `
+      <option value="">Selecciona una respuesta</option>
+    `;
+
+    pregunta.opciones.forEach(opcion => {
+
+      opciones += `
+
+        <option value="${escaparHTML(opcion.codigo)}">
+
+          ${escaparHTML(opcion.codigo)}
+          - ${escaparHTML(opcion.texto)}
+
+        </option>
+
+      `;
+
+    });
+
+    contenedor.innerHTML = `
+
+      <select
+        class="answer-input"
+        id="input_${escaparHTML(pregunta.preguntaId)}"
+      >
+
+        ${opciones}
+
+      </select>
+
+    `;
+
+    return;
+
+  }
+
+
+  /*
+   * SELECCIÓN MÚLTIPLE / SELECCIÓN
+   *
+   * El backend actual corrige una sola alternativa
+   * por pregunta.
+   */
+
+  pregunta.opciones.forEach(opcion => {
+
+    const identificador =
+      "q_" + pregunta.preguntaId;
+
+    const etiqueta = document.createElement("label");
+
+    etiqueta.className = "option";
+
+    etiqueta.innerHTML = `
+
+      <input
+        type="radio"
+        name="${escaparHTML(identificador)}"
+        value="${escaparHTML(opcion.codigo)}"
+      >
+
+      <span>
+        <strong>${escaparHTML(opcion.codigo)}.</strong>
+        ${escaparHTML(opcion.texto)}
+      </span>
+
+    `;
+
+    contenedor.appendChild(etiqueta);
+
+  });
+
+}
+
+
+/* =====================================================
+   RECOPILAR RESPUESTAS
+===================================================== */
+
+function recopilarRespuestas() {
+
+  const respuestas = [];
+
+  preguntasActuales.forEach(pregunta => {
+
+    const tipo = normalizar(pregunta.tipo);
+
+    let respuesta = "";
+
+    if (
+      tipo === "cloze" ||
+      tipo === "completar" ||
+      tipo === "texto" ||
+      tipo === "pareados"
+    ) {
+
+      const campo = document.getElementById(
+        "input_" + pregunta.preguntaId
+      );
+
+      respuesta = campo ? campo.value.trim() : "";
+
+    } else {
+
+      const seleccionada = document.querySelector(
+        'input[name="q_' +
+        CSS.escape(pregunta.preguntaId) +
+        '"]:checked'
+      );
+
+      respuesta = seleccionada
+        ? seleccionada.value
+        : "";
+
+    }
+
+    respuestas.push({
+
+      preguntaId: pregunta.preguntaId,
+
+      respuesta: respuesta
+
+    });
+
+  });
+
+  return respuestas;
+
+}
+
+
+/* =====================================================
+   ENVIAR EVALUACIÓN
+===================================================== */
+
+function enviarRespuestas() {
+
+  const boton = document.getElementById("submitButton");
+
+  const respuestas = recopilarRespuestas();
+
+  const submission = {
+
+    evaluacionId: evaluacionActual.evaluacionId,
+
+    estudianteId: estudianteActual.estudianteId,
+
+    apellidos: estudianteActual.apellidos,
+
+    nombres: estudianteActual.nombres,
+
+    curso: estudianteActual.curso,
+
+    respuestas: respuestas
+
+  };
+
+  boton.disabled = true;
+  boton.textContent = "Procesando evaluación...";
+
+  ocultarMensaje("examMessage");
+
+  google.script.run
+
+    .withSuccessHandler(resultado => {
+
+      if (!resultado.correcto) {
+
+        boton.disabled = false;
+        boton.textContent = "Finalizar y revisar evaluación";
+
+        mostrarMensaje(
+          "examMessage",
+          resultado.mensaje,
+          "error"
+        );
+
+        return;
+
+      }
+
+      mostrarResultado(resultado.resultado);
+
+    })
+
+    .withFailureHandler(error => {
+
+      boton.disabled = false;
+      boton.textContent = "Finalizar y revisar evaluación";
+
+      mostrarMensaje(
+        "examMessage",
+        "No fue posible enviar la evaluación: " + error.message,
+        "error"
+      );
+
+    })
+
+    .enviarEvaluacion(submission);
+
+}
+
+
+/* =====================================================
+   MOSTRAR RESULTADOS
+===================================================== */
+
+function mostrarResultado(resultado) {
+
+  document.getElementById("resultPercentage").textContent =
+    resultado.porcentaje + "%";
+
+  document.getElementById("resultLevel").textContent =
+    resultado.nivel;
+
+  document.getElementById("resultScore").textContent =
+    resultado.puntaje;
+
+  document.getElementById("resultMax").textContent =
+    resultado.puntajeMaximo;
+
+  document.getElementById("resultGrade").textContent =
+    Number(resultado.nota).toFixed(1);
+
+  document.getElementById("resultCorrect").textContent =
+    resultado.correctas + "/" + resultado.totalPreguntas;
+
+  document.getElementById("resultMessage").textContent =
+    "Evaluación registrada correctamente. " +
+    "Tu resultado fue enviado al sistema del establecimiento.";
+
+  mostrarSeccion("resultSection");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* =====================================================
+   VOLVER AL INICIO
+===================================================== */
+
+function volverAlInicio() {
+
+  // Limpiar datos del estudiante anterior
+  estudianteActual = null;
+
+  // Limpiar evaluación anterior
+  evaluacionActual = null;
+
+  // Limpiar preguntas y evaluaciones
+  preguntasActuales = [];
+  evaluacionesDisponibles = [];
+
+  // Limpiar identificación
+  document.getElementById("apellidos").value = "";
+  document.getElementById("nombres").value = "";
+  document.getElementById("curso").value = "";
+
+  // Limpiar lista de evaluaciones
+  document.getElementById("evaluationSelect").innerHTML =
+    '<option value="">Selecciona una evaluación</option>';
+
+  // Limpiar mensajes
+  ocultarMensaje("loginMessage");
+  ocultarMensaje("evaluationMessage");
+  ocultarMensaje("examMessage");
+
+  // Limpiar preguntas anteriores
+  document.getElementById("questionsContainer").innerHTML = "";
+
+  // Restablecer botón de validación
+  const validateButton = document.getElementById("validateButton");
+
+  validateButton.disabled = false;
+  validateButton.textContent = "Validar estudiante";
+
+  // Restablecer botón de inicio de evaluación
+  const startButton = document.getElementById("startButton");
+
+  startButton.disabled = false;
+  startButton.textContent = "Comenzar evaluación";
+
+  // Restablecer botón de envío
+  const submitButton = document.getElementById("submitButton");
+
+  submitButton.disabled = false;
+  submitButton.textContent = "Finalizar y revisar evaluación";
+
+  // Regresar a la pantalla inicial
+  mostrarSeccion("loginSection");
+
+  // Volver al inicio de la página
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* =====================================================
+   PANEL DOCENTE Y RECTORÍA
+===================================================== */
+
+function mostrarAccesoDocente() {
+  ocultarMensaje("teacherLoginMessage");
+  const campoContrasena = document.getElementById("teacherPassword");
+  campoContrasena.value = "";
+  campoContrasena.type = "password";
+  const botonVisibilidad = document.getElementById("toggleTeacherPassword");
+  if (botonVisibilidad) {
+    botonVisibilidad.textContent = "Mostrar";
+    botonVisibilidad.setAttribute("aria-label", "Mostrar contraseña");
+    botonVisibilidad.setAttribute("aria-pressed", "false");
+  }
+  mostrarSeccion("teacherLoginSection");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function alternarVisibilidadContrasenaDocente() {
+  const campo = document.getElementById("teacherPassword");
+  const boton = document.getElementById("toggleTeacherPassword");
+  const mostrar = campo.type === "password";
+
+  campo.type = mostrar ? "text" : "password";
+  boton.textContent = mostrar ? "Ocultar" : "Mostrar";
+  boton.setAttribute("aria-label", mostrar ? "Ocultar contraseña" : "Mostrar contraseña");
+  boton.setAttribute("aria-pressed", mostrar ? "true" : "false");
+  campo.focus();
+}
+
+function iniciarSesionDocente() {
+  const clave = document.getElementById("teacherPassword").value;
+  const boton = document.getElementById("teacherLoginButton");
+  if (!clave) {
+    mostrarMensaje("teacherLoginMessage", "Ingresa la contraseña de acceso.", "error");
+    return;
+  }
+  boton.disabled = true;
+  boton.textContent = "Verificando...";
+  google.script.run
+    .withSuccessHandler(respuesta => {
+      boton.disabled = false;
+      boton.textContent = "Ingresar al panel";
+      document.getElementById("teacherPassword").value = "";
+      if (!respuesta || !respuesta.correcto) {
+        mostrarMensaje("teacherLoginMessage", respuesta?.mensaje || "No fue posible validar el acceso.", "error");
+        return;
+      }
+      sesionDocenteToken = respuesta.token;
+      if (temporizadorSesionDocente) clearTimeout(temporizadorSesionDocente);
+      temporizadorSesionDocente = setTimeout(() => {
+        sesionDocenteToken = null;
+        resultadosDocente = [];
+        mostrarAccesoDocente();
+        mostrarMensaje("teacherLoginMessage", "La sesión docente expiró por seguridad. Ingresa nuevamente.", "info");
+      }, 30 * 60 * 1000);
+      cargarResultadosDocente();
+    })
+    .withFailureHandler(error => {
+      boton.disabled = false;
+      boton.textContent = "Ingresar al panel";
+      mostrarMensaje("teacherLoginMessage", error.message || "Error al validar el acceso.", "error");
+    })
+    .validarAccesoDocente(clave);
+}
+
+function cargarResultadosDocente() {
+  mostrarSeccion("teacherDashboardSection");
+  mostrarMensaje("teacherResultsMessage", "Cargando resultados registrados...", "info");
+  google.script.run
+    .withSuccessHandler(datos => {
+      resultadosDocente = Array.isArray(datos) ? datos : [];
+      // Lista oficial: no se generan opciones a partir de nombres históricos inconsistentes.
+      const cursos = ["3° Básico", "4° Básico", "5° Básico", "6° Básico"];
+      const select = document.getElementById("teacherCourseFilter");
+      select.innerHTML = '<option value="">Todos los cursos</option>';
+      cursos.forEach(curso => {
+        const option = document.createElement("option");
+        option.value = curso;
+        option.textContent = curso;
+        select.appendChild(option);
+      });
+      actualizarResumenDocente();
+      filtrarResultadosDocente();
+      if (!resultadosDocente.length) {
+        mostrarMensaje("teacherResultsMessage", "Todavía no hay evaluaciones registradas.", "info");
+      } else {
+        ocultarMensaje("teacherResultsMessage");
+      }
+    })
+    .withFailureHandler(error => {
+      if (String(error.message || "").toLowerCase().includes("sesión")) {
+        sesionDocenteToken = null;
+        mostrarAccesoDocente();
+      }
+      mostrarMensaje("teacherResultsMessage", error.message || "No fue posible cargar los resultados.", "error");
+    })
+    .obtenerResultadosDocente(sesionDocenteToken);
+}
+
+function actualizarResumenDocente() {
+  const total = resultadosDocente.length;
+  const promedio = total ? resultadosDocente.reduce((s, r) => s + Number(r.porcentaje || 0), 0) / total : 0;
+  const estudiantes = new Set(resultadosDocente.map(r => r.estudianteId).filter(Boolean));
+  document.getElementById("teacherTotal").textContent = total;
+  document.getElementById("teacherAverage").textContent = promedio.toFixed(1) + "%";
+  document.getElementById("teacherStudents").textContent = estudiantes.size;
+}
+
+function filtrarResultadosDocente() {
+  const curso = document.getElementById("teacherCourseFilter").value;
+  const busqueda = normalizar(document.getElementById("teacherStudentFilter").value);
+  const filtrados = resultadosDocente.filter(r => {
+    const coincideCurso = !curso || r.curso === curso;
+    const texto = normalizar([r.estudiante, r.apellidos, r.nombres, r.estudianteId].join(" "));
+    return coincideCurso && (!busqueda || texto.includes(busqueda));
+  });
+  const cuerpo = document.getElementById("teacherResultsBody");
+  if (!filtrados.length) {
+    cuerpo.innerHTML = '<tr><td colspan="9">No se encontraron resultados con esos filtros.</td></tr>';
+  } else {
+    cuerpo.innerHTML = filtrados.map(r => `<tr>
+      <td>${escaparHTML(r.fecha)}</td>
+      <td>${escaparHTML(r.curso)}</td>
+      <td><strong>${escaparHTML(r.estudiante)}</strong><br><small>${escaparHTML(r.estudianteId)}</small></td>
+      <td>${escaparHTML(r.evaluacion)}</td>
+      <td>${escaparHTML(r.puntaje)} / ${escaparHTML(r.puntajeMaximo)}</td>
+      <td><strong>${Number(r.porcentaje || 0).toFixed(1)}%</strong></td>
+      <td><strong>${Number.isFinite(Number(r.nota)) ? Number(r.nota).toFixed(1).replace(".", ",") : "—"}</strong></td>
+      <td>${escaparHTML(r.nivel)}</td>
+      <td><small>${escaparHTML(r.intentoId)}</small></td>
+    </tr>`).join("");
+  }
+  document.getElementById("teacherRowsInfo").textContent = `Mostrando ${filtrados.length} de ${resultadosDocente.length} registros. Cada fila corresponde a un intento de evaluación.`;
+}
+
+function cerrarSesionDocenteUI() {
+  const token = sesionDocenteToken;
+  if (temporizadorSesionDocente) clearTimeout(temporizadorSesionDocente);
+  temporizadorSesionDocente = null;
+  sesionDocenteToken = null;
+  resultadosDocente = [];
+  if (token) google.script.run.cerrarSesionDocente(token);
+  mostrarAccesoDocente();
+}
+
+/* =====================================================
+   INICIALIZAR SISTEMA
+===================================================== */
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  cargarCursos();
+
+});
+
+</script>
+
+</body>
+</html>
